@@ -25,7 +25,7 @@ const About = () => {
                     </p>
 
                     <Link to="/">
-                        <button className="btn">Learn More</button>
+                        <button className="btn" style={{marginBottom: 58}}>Learn More</button>
                     </Link>
                 </div>
             </div>
