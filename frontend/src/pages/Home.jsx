@@ -8,6 +8,7 @@ import icon02 from "../assets/images/icon02.png";
 import icon03 from "../assets/images/icon03.png";
 import About from "../components/About/About";
 import ServicesList from "../components/Services/ServicesList";
+import featureImg from "../assets/images/feature-img.png";
 const Home = () => {
   return (
     <>
@@ -168,6 +169,41 @@ const Home = () => {
           </div>
 
           <ServicesList />
+        </div>
+      </section>
+      {/* === end === */}
+
+      {/* === feature section === */}
+      <section>
+        <div className="container">
+          <div className="flex items-center justify-between flex-col lg:flex-row">
+            {/* === feature section === */}
+            <div className="xl:w-[670px]">
+              <h2 className="heading">
+                Get virtual treatment <br /> anytime.
+              </h2>
+
+              <ul className="pl-4">
+                <li className="text__para">
+                  1. Schedule the appointment directly.
+                </li>
+                <li className="text__para">
+                  2. Search for your physician here, and contact their office.
+                </li>
+                <li className="text__para">
+                  3. View our physician who are accepting new patients, use the online scheduling tool to select an appointment time.
+                </li>
+              </ul>
+              <Link to="/">
+                <button className="btn">Learn More</button>
+              </Link>
+            </div>
+
+            {/* === feature img === */}
+            <div className="realtive z-10 xl:w-[770px] flex justify-end mt-[50px] lg:mt-0">
+              <img src={featureImg} className="w-3/4" alt="" />
+            </div>
+          </div>
         </div>
       </section>
       {/* === end === */}
