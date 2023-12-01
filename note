@@ -1,0 +1,3 @@
+crypto.randomBytes(256).toString('base64') // we can use it to create secret key 
+
+//but first we have to type node inside our cmd
