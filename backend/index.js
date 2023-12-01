@@ -3,7 +3,7 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-import authRoute from "./Routes/auth";
+import authRoute from "./Routes/auth.js";
 
 dotenv.config();
 
@@ -27,6 +27,7 @@ const connectDB = async() => {
 
         console.log("Connected to DB");
     } catch(err){
+        console.log(err);
         console.log("MongoDB database connection failed");
     }
 }
