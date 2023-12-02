@@ -41,15 +41,16 @@ export const restrict = roles => async (req, res, next) => {
     const patient = await User.findById(userId);
     const doctor = await Doctor.findById(userId);
 
-    if(patient){
+    if (patient) {
         user = patient;
-    }
-    if(doctor){
+    } else if (doctor) {
         user = doctor;
+    } else {
+        return res.status(401).json({ success: false, message: "User not found." });
     }
 
-    if(!roles.includes(user.role)){
-        return res.status(401).json({success: false, message: "You are unauthorized to perform this action."});
+    if (!roles.includes(user.role)) {
+        return res.status(401).json({ success: false, message: "You are unauthorized to perform this action." });
     }
 
     next();
