@@ -6,6 +6,7 @@ const initialState = {
   token: localStorage.getItem("role") || null,
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const authContext = createContext(initialState);
 
 const authReducer = (state, action) => {
