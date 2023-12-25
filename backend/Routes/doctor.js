@@ -1,5 +1,5 @@
 import express from "express";
-import { updateDoctor, deleteDoctor, getAllDoctor, getSingleDoctor } from "../Controllers/doctorContoller.js";
+import { updateDoctor, deleteDoctor, getAllDoctor, getSingleDoctor, getDoctorProfile } from "../Controllers/doctorContoller.js";
 import { authenticate, restrict } from "../Auth/verifyToken.js"; 
 
 import reviewRouter from "./review.js";
@@ -14,5 +14,7 @@ router.get("/:id", getSingleDoctor);
 router.get("/", getAllDoctor);
 router.put("/:id", authenticate, restrict(['doctor']), updateDoctor);
 router.delete("/:id", authenticate, restrict(['doctor']), deleteDoctor);
+
+router.get("/profile/me", authenticate, restrict(['doctor']), getDoctorProfile); 
 
 export default router;
