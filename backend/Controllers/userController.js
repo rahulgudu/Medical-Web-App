@@ -48,6 +48,7 @@ export const getAllUser = async (req, res) => {
 }
 
 export const getUserProfile = async(req, res) => {
+    // console.log(req.userId);
     const userID = req.userId;
     try {
         const user = await User.findById(userID);
@@ -55,9 +56,9 @@ export const getUserProfile = async(req, res) => {
         if (!user) {
             return res.status(404).json({success: false, message: "User not found"});
         }
-
-        const [password, ...rest] = user._doc;
-
+        
+        const {password, ...rest} = user._doc;
+        
         res.status(200).json({success: true, message: "Profile info is getting", data: {...rest}});
     } catch (error) {
         res.status(500).json({success: false, message: "Something went wrong, cannot get"});

@@ -16,7 +16,7 @@ const useFetchData = (url) => {
                 const result = await res.json();
 
                 if(!res.ok){
-                    throw new Error(result.message + "🤢")
+                    throw new Error(result.message + "🤢");
                 }
 
                 setData(result.data);
@@ -24,6 +24,7 @@ const useFetchData = (url) => {
             } catch (err){
                 setLoading(false)
                 setError(err.message)
+                console.log(err);
             }
         }
 

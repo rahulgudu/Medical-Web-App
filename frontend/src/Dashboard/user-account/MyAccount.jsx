@@ -59,7 +59,7 @@ const MyAccount = () => {
                 <p className="text-textColor text-[15px] leading-6 font-medium">
                   Blood Type:
                   <span className="ml-2 text-heading text-[22px] leading-8">
-                    o-
+                    {userData.bloodType !== " " ? userData.bloodType : "Update"}
                   </span>
                 </p>
               </div>
@@ -100,7 +100,7 @@ const MyAccount = () => {
               </div>
 
               {tab === "bookings" && <MyBookings />}
-              {tab === "settings" && <ProfileSettings />}
+              {tab === "settings" && <ProfileSettings user={userData} />}
             </div>
           </div>
         )}
