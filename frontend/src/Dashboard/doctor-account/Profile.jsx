@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { AiOutlineDelete } from "react-icons/ai";
+import uploadImageToCloudinary from "./../../utils/uploadCloudinary";
 const Profile = () => {
   const [formData, setFormData] = useState({
     name: "",
@@ -15,13 +16,18 @@ const Profile = () => {
     photo: null,
   });
 
-  const handleInputChange = (e) => {
+  const handleInputChange =  (e) => {
     e.preventDefault();
 
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleFileInputChange = () => {};
+  const handleFileInputChange = async (event) => {
+    const file = event.target.files[0];
+    const data = await uploadImageToCloudinary(file);
+
+    setFormData({...formData, photo: data?.url});
+  };
 
   const updateProfileHandler = async (e) => {
     e.preventDefault();
