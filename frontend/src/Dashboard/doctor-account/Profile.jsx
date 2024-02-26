@@ -1,63 +1,96 @@
-import { useState } from "react";
+/* eslint-disable react/prop-types */
+import { useEffect, useState } from "react";
 import { AiOutlineDelete } from "react-icons/ai";
 import uploadImageToCloudinary from "./../../utils/uploadCloudinary";
-const Profile = () => {
+import { BASE_URL, token } from "./../../config";
+import { toast } from "react-toastify";
+
+const Profile = ({ doctorsData }) => {
   const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    gender: "",
-    specialization: "",
-    ticketPrice: 0,
-    qualification: [],
-    experience: [],
-    timeSlots: [],
-    about: "",
-    photo: null,
+    name: doctorsData.name || "",
+    email: doctorsData.email || "",
+    phone: doctorsData.phone || "",
+    gender: doctorsData.gender || "",
+    specialization: doctorsData.specialization || "",
+    ticketPrice: doctorsData.ticketPrice || 0,
+    qualifications: doctorsData.qualifications || [],
+    experiences: doctorsData.experiences || [],
+    timeSlots: doctorsData.timeSlots || [],
+    about: doctorsData.about || "",
+    photo: doctorsData.photo || null,
   });
 
-  const handleInputChange =  (e) => {
-    e.preventDefault();
+  useEffect(() => {
+    setFormData({
+      name: doctorsData?.name,
+      email: doctorsData?.email,
+      phone: doctorsData?.phone,
+      gender: doctorsData?.gender,
+      specialization: doctorsData?.specialization,
+      ticketPrice: doctorsData?.ticketPrice,
+      qualifications: doctorsData?.qualifications,
+      experiences: doctorsData?.experiences,
+      timeSlots: doctorsData?.timeSlots,
+      about: doctorsData?.about,
+      photo: doctorsData?.photo,
+    });
+  }, [doctorsData]);
 
+  const handleInputChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleFileInputChange = async (event) => {
     const file = event.target.files[0];
     const data = await uploadImageToCloudinary(file);
-
-    setFormData({...formData, photo: data?.url});
+    setFormData({ ...formData, photo: data?.url });
   };
 
   const updateProfileHandler = async (e) => {
     e.preventDefault();
+
+    try {
+      const res = await fetch(`${BASE_URL}/doctors/${doctorsData._id}`, {
+        method: "PUT",
+        headers: {
+          "content-type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const result = await res.json();
+
+      if (!res.ok) {
+        throw Error(result.message);
+      }
+
+      toast.success(result.message);
+    } catch (error) {
+      toast.error(error.message);
+    }
   };
 
-  // reusable function for adding item
   const addItem = (key, item) => {
     setFormData((prevFormData) => ({
       ...prevFormData,
-      [key]: [...prevFormData[key], item],
+      [key]: [...(prevFormData[key] || []), item], 
     }));
   };
 
-  // resuable input change function
   const handleReusableChangeFunc = (key, index, event) => {
     const { name, value } = event.target;
 
     setFormData((prevFormData) => {
-      const updateItems = [...prevFormData[key]];
-
-      updateItems[index][name] = value;
-
+      const updateItems = [...prevFormData[key]]; 
+      updateItems[index][name] = value; 
       return {
         ...prevFormData,
-        [key]: updateItems,
+        [key]: updateItems, 
       };
     });
   };
 
-  // resuable delete function
   const deleteItem = (key, index) => {
     setFormData((prevFormData) => ({
       ...prevFormData,
@@ -68,7 +101,7 @@ const Profile = () => {
   const addQualification = (e) => {
     e.preventDefault();
 
-    addItem("qualification", {
+    addItem("qualifications", {
       startingDate: "",
       endingDate: "",
       degree: "",
@@ -77,33 +110,34 @@ const Profile = () => {
   };
 
   const handleQualificationChange = (event, index) => {
-    handleReusableChangeFunc("qualification", index, event);
+    handleReusableChangeFunc("qualifications", index, event);
   };
 
-  const handleDeleteQualificaton = (e, index) => {
+  const handleDeleteQualification = (e, index) => {
     e.preventDefault();
 
-    deleteItem("qualification", index);
+    deleteItem("qualifications", index);
   };
 
   const addExperience = (e) => {
     e.preventDefault();
 
-    addItem("experience", {
+    addItem("experiences", {
       startingDate: "",
       endingDate: "",
       position: "",
       hospital: "",
     });
   };
+
   const handleExperienceChange = (event, index) => {
-    handleReusableChangeFunc("experience", index, event);
+    handleReusableChangeFunc("experiences", index, event);
   };
 
   const handleDeleteExperience = (e, index) => {
     e.preventDefault();
 
-    deleteItem("experience", index);
+    deleteItem("experiences", index);
   };
 
   const addTimeSlots = (e) => {
@@ -114,11 +148,11 @@ const Profile = () => {
 
   const handleTimeSlotsChange = (event, index) => {
     const { name, value } = event.target;
-  
+
     setFormData((prevFormData) => {
       const updateTimeSlots = [...prevFormData.timeSlots];
       updateTimeSlots[index][name] = value;
-  
+
       return {
         ...prevFormData,
         timeSlots: updateTimeSlots,
@@ -129,8 +163,8 @@ const Profile = () => {
   const handleDeleteTimeSlots = (event, index) => {
     event.preventDefault();
 
-    deleteItem("timeSlots", index)
-  }
+    deleteItem("timeSlots", index);
+  };
 
   return (
     <div>
@@ -232,8 +266,8 @@ const Profile = () => {
         </div>
 
         <div className="mb-5">
-          <p className="form__label">Qualification*</p>
-          {formData.qualification?.map((item, index) => (
+          <p className="form__label">Qualifications*</p>
+          {formData.qualifications?.map((item, index) => (
             <div key={index}>
               <div>
                 <div className="grid grid-cols-2 gap-5">
@@ -282,7 +316,7 @@ const Profile = () => {
                 </div>
 
                 <button
-                  onClick={(e) => handleDeleteQualificaton(e, index)}
+                  onClick={(e) => handleDeleteQualification(e, index)}
                   className="bg-red-600 p-2 rounded-full text-white text-[18px] mt-2 mb-[30px] cursor-pointer"
                 >
                   <AiOutlineDelete />
@@ -300,8 +334,8 @@ const Profile = () => {
         </div>
 
         <div className="mb-5">
-          <p className="form__label">Experience*</p>
-          {formData.experience?.map((item, index) => (
+          <p className="form__label">Experiences*</p>
+          {formData.experiences?.map((item, index) => (
             <div key={index}>
               <div>
                 <div className="grid grid-cols-2 gap-5">
@@ -379,7 +413,7 @@ const Profile = () => {
                       name="day"
                       value={item.day}
                       className="form__input py-3.5"
-                      onChange={e=>handleTimeSlotsChange(e, index)}
+                      onChange={(e) => handleTimeSlotsChange(e, index)}
                     >
                       <option value="select">Select</option>
                       <option value="saturday">Saturday</option>
@@ -398,7 +432,7 @@ const Profile = () => {
                       name="startingTime"
                       value={item.startingTime}
                       className="form__input"
-                      onChange={e=>handleTimeSlotsChange(e, index)}
+                      onChange={(e) => handleTimeSlotsChange(e, index)}
                     />
                   </div>
                   <div>
@@ -408,11 +442,14 @@ const Profile = () => {
                       name="endingTime"
                       value={item.endingTime}
                       className="form__input"
-                      onChange={e=>handleTimeSlotsChange(e, index)}
+                      onChange={(e) => handleTimeSlotsChange(e, index)}
                     />
                   </div>
                   <div className="flex items-center">
-                    <button onClick={e => handleDeleteTimeSlots(e, index)} className="bg-red-600 p-2 rounded-full text-white text-[18px] mb-[30px] cursor-pointer mt-6">
+                    <button
+                      onClick={(e) => handleDeleteTimeSlots(e, index)}
+                      className="bg-red-600 p-2 rounded-full text-white text-[18px] mb-[30px] cursor-pointer mt-6"
+                    >
                       <AiOutlineDelete />
                     </button>
                   </div>
@@ -421,7 +458,10 @@ const Profile = () => {
             </div>
           ))}
 
-          <button onClick={addTimeSlots} className="bg-[#000] py-2 px-5 rounded text-white h-fit cursor-pointer">
+          <button
+            onClick={addTimeSlots}
+            className="bg-[#000] py-2 px-5 rounded text-white h-fit cursor-pointer"
+          >
             Add Time Slots
           </button>
         </div>
